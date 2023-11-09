@@ -1,0 +1,14 @@
+#Plot 'EQ-5D Index' scores pre and post operation for each gender
+
+```{R Gender}
+gender_EQ5D <- hip_data %>% select('Gender', 'Pre-Op Q EQ5D Index', 'Post-Op Q EQ5D Index')
+
+```
+#remove NA from gender
+```{R NA}
+gender_EQ5D_noNA <- gender_EQ5D %>% drop_na() %>% filter('Gender' != '*')
+```
+#tidy data
+```{R tidy}
+tidy_gender_EQ5D_noNA <- gender_EQ5D_noNA %>% pivot_longer(c('Pre-Op Q EQ5D Index', 'Post-Op Q EQ5D Index'), names_to = 'Time', names_prefix = 'EQ5D_', values_to = 'EQ5D')
+```

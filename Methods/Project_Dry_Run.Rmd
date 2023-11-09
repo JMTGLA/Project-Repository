@@ -1,0 +1,37 @@
+##Load packages
+```{r load-packages}
+library(tidyverse)
+```
+
+#Read in data
+```{r read-data}
+library(here)
+scotland_data <- read_csv(here("Project_Inputs/scotpho_data_extract_Scotland.csv"))
+glasgow_data <- read_csv(here("Project_Inputs/scotpho_data_extract_GGC.csv"))
+tayside_data <- read_csv(here("Project_Inputs/scotpho_data_extract_Tayside.csv"))
+```
+#Prepare the data
+```{r prepare-data}
+scotland_drug_deaths <- scotland_data %>%
+  select('area_name', 'year', 'measure') %>%
+  rename(per_capita_deaths = 'measure', area = 'area_name')
+
+glasgow_drug_deaths <- glasgow_data %>%
+  select('area_name', 'year', 'measure') %>%
+  rename(per_capita_deaths = 'measure', area = 'area_name')
+
+tayside_drug_deaths <- tayside_data %>%
+  select('area_name', 'year', 'measure') %>%
+  rename(per_capita_deaths = 'measure', area = 'area_name')
+
+combined_drug_deaths <- scotland_drug_deaths %>% bind_rows(glasgow_drug_deaths) %>% bind_rows(tayside_drug_deaths)
+
+write_csv(combined_drug_deaths, "combined_drug_deaths.csv")
+
+```
+
+#Plot the data
+```{r plot-data}
+combined_drug_deaths %>%
+  ggplot(aes(x = year, y = per_capita_deaths))+ geom_line() + facet_wrap(~area)
+```
